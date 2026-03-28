@@ -1,0 +1,10 @@
+# Build artifacts (nằm ngoài src nhưng phòng ngừa)
+build/
+install/
+log/
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+# ROS2 symlink artifacts
+*.egg-info/

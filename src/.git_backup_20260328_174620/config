@@ -1,0 +1,8 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/ducduy9304/turtlebot4.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
