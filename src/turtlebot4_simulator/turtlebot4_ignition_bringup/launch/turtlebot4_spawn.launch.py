@@ -52,9 +52,14 @@ ARGUMENTS = [
                           description='Whether to launch Nav2'),
 ]
 
-for pose_element in ['x', 'y', 'z', 'yaw']:
-    ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
-                     description=f'{pose_element} component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('x', default_value='1.0',
+                 description='x component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('y', default_value='0.0',
+                 description='y component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('z', default_value='0.0',
+                 description='z component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('yaw', default_value='3.14159',
+                 description='yaw component of the robot pose.'))
 
 
 def generate_launch_description():
@@ -135,11 +140,11 @@ def generate_launch_description():
         ),
 
         # Dock description
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([dock_description_launch]),
-            # The robot starts docked
-            launch_arguments={'gazebo': 'ignition'}.items(),
-        ),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([dock_description_launch]),
+        #     # The robot starts docked
+        #     # launch_arguments={'gazebo': 'ignition'}.items(),
+        # ),
 
         # Spawn TurtleBot 4
         Node(
@@ -155,17 +160,17 @@ def generate_launch_description():
         ),
 
         # Spawn Dock
-        Node(
-            package='ros_ign_gazebo',
-            executable='create',
-            arguments=['-name', dock_name,
-                       '-x', x_dock,
-                       '-y', y_dock,
-                       '-z', z,
-                       '-Y', yaw_dock,
-                       '-topic', 'standard_dock_description'],
-            output='screen',
-        ),
+        # Node(
+        #     package='ros_ign_gazebo',
+        #     executable='create',
+        #     arguments=['-name', dock_name,
+        #                '-x', x_dock,
+        #                '-y', y_dock,
+        #                '-z', z,
+        #                '-Y', yaw_dock,
+        #                '-topic', 'standard_dock_description'],
+        #     output='screen',
+        # ),
 
         # ROS IGN bridge
         IncludeLaunchDescription(

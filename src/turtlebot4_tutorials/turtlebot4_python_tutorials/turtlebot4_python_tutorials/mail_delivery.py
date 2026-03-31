@@ -15,10 +15,135 @@
 # limitations under the License.
 #
 # @author Hilary Luo (hluo@clearpathrobotics.com)
+# Modified: ArUco-based initialization replacing dock-based flow
 
 import rclpy
+from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
+
+from sensor_msgs.msg import Image
 
 from turtlebot4_navigation.turtlebot4_navigator import TurtleBot4Directions, TurtleBot4Navigator
+
+import cv2
+from cv_bridge import CvBridge
+
+import threading
+import time
+
+# ============================================================
+# CONFIGURATION - Hardcoded spawn pose (matches launch defaults)
+# Robot spawns at x=1.0, y=0.0, yaw=3.14159 (SOUTH = facing -X)
+# ============================================================
+SPAWN_POSE = [1.0, 0.0]
+SPAWN_HEADING = TurtleBot4Directions.SOUTH
+
+# ArUco detection settings
+ARUCO_DICT_TYPE = cv2.aruco.DICT_4X4_50      # Dictionary matching marker texture
+REQUIRED_DETECTIONS = 5                       # Number of consecutive frames needed
+CAMERA_TOPIC = '/oakd/rgb/preview/image_raw'  # OAK-D camera topic in simulation
+
+
+class ArucoVerifier(Node):
+    """
+    Lightweight ROS 2 node that subscribes to the OAK-D camera feed,
+    runs ArUco marker detection, and counts successful detections.
+    """
+
+    def __init__(self):
+        super().__init__('aruco_verifier')
+        self.bridge = CvBridge()
+        self.detection_count = 0
+        self.verified = False
+        self.lock = threading.Lock()
+
+        # ArUco detector setup
+        self.aruco_dict = cv2.aruco.getPredefinedDictionary(ARUCO_DICT_TYPE)
+        self.aruco_params = cv2.aruco.DetectorParameters_create()
+
+        # Subscribe to camera
+        self.subscription = self.create_subscription(
+            Image,
+            CAMERA_TOPIC,
+            self._image_callback,
+            qos_profile_sensor_data
+        )
+        self.get_logger().info(
+            f'[ArUco] Subscribing to camera: {CAMERA_TOPIC}')
+        self.get_logger().info(
+            f'[ArUco] Waiting for {REQUIRED_DETECTIONS} valid detection frames...')
+
+    def _image_callback(self, msg: Image):
+        """Process each camera frame for ArUco markers."""
+        with self.lock:
+            if self.verified:
+                return  # Already done, skip processing
+
+        try:
+            # Convert ROS Image → OpenCV BGR
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        except Exception as e:
+            self.get_logger().warn(f'[ArUco] cv_bridge error: {e}')
+            return
+
+        # Convert to grayscale for detection
+        gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+
+        # Detect ArUco markers
+        corners, ids, _ = cv2.aruco.detectMarkers(
+            gray, self.aruco_dict, parameters=self.aruco_params)
+
+        with self.lock:
+            if ids is not None and len(ids) > 0:
+                self.detection_count += 1
+                detected_ids = [int(i) for i in ids.flatten()]
+                self.get_logger().info(
+                    f'[ArUco] ✓ Frame {self.detection_count}/{REQUIRED_DETECTIONS}'
+                    f' — Detected marker IDs: {detected_ids}')
+
+                if self.detection_count >= REQUIRED_DETECTIONS:
+                    self.verified = True
+                    self.get_logger().info(
+                        '═══════════════════════════════════════════')
+                    self.get_logger().info(
+                        '[ArUco] VERIFICATION COMPLETE — '
+                        f'{REQUIRED_DETECTIONS}/{REQUIRED_DETECTIONS} frames OK!')
+                    self.get_logger().info(
+                        '═══════════════════════════════════════════')
+            else:
+                self.get_logger().info(
+                    f'[ArUco] ✗ No marker detected (still need '
+                    f'{REQUIRED_DETECTIONS - self.detection_count} more frames)')
+
+    def is_verified(self) -> bool:
+        with self.lock:
+            return self.verified
+
+
+def run_aruco_verification(navigator: TurtleBot4Navigator) -> bool:
+    """
+    Spin an ArucoVerifier node until 5 valid frames are confirmed.
+    Blocks the main flow until verification succeeds.
+    Returns True on success.
+    """
+    verifier = ArucoVerifier()
+
+    navigator.info('══════════════════════════════════════════════')
+    navigator.info('[Phase 1] ArUco Marker Detection — Starting...')
+    navigator.info('══════════════════════════════════════════════')
+
+    try:
+        while rclpy.ok() and not verifier.is_verified():
+            rclpy.spin_once(verifier, timeout_sec=0.1)
+            # Also spin navigator to keep it alive
+            rclpy.spin_once(navigator, timeout_sec=0.05)
+    except KeyboardInterrupt:
+        verifier.get_logger().info('[ArUco] Interrupted by user.')
+        verifier.destroy_node()
+        return False
+
+    verifier.destroy_node()
+    return True
 
 
 def main(args=None):
@@ -26,20 +151,51 @@ def main(args=None):
 
     navigator = TurtleBot4Navigator()
 
-    # Start on dock
-    if not navigator.getDockedStatus():
-        navigator.info('Docking before intialising pose')
-        navigator.dock()
+    # ===================================================================
+    # STEP 1: ArUco verification (replaces docking logic)
+    # OLD (commented out — causes hang without real Create 3 hardware):
+    #   if not navigator.getDockedStatus():
+    #       navigator.info('Docking before intialising pose')
+    #       navigator.dock()
+    # ===================================================================
 
-    # Set initial pose
-    initial_pose = navigator.getPoseStamped([0.0, 0.0], TurtleBot4Directions.NORTH)
+    navigator.info('Robot spawned. Starting ArUco verification sequence...')
+    aruco_ok = run_aruco_verification(navigator)
+
+    if not aruco_ok:
+        navigator.error('ArUco verification failed or was interrupted. Exiting.')
+        rclpy.shutdown()
+        return
+
+    # ===================================================================
+    # STEP 2: Set hardcoded initial pose (spawn location)
+    # ===================================================================
+    navigator.info('══════════════════════════════════════════════')
+    navigator.info('[Phase 2] Setting initial pose from spawn location...')
+    navigator.info(f'  Pose: x={SPAWN_POSE[0]}, y={SPAWN_POSE[1]}, '
+                   f'heading={SPAWN_HEADING.name}')
+    navigator.info('══════════════════════════════════════════════')
+
+    initial_pose = navigator.getPoseStamped(SPAWN_POSE, SPAWN_HEADING)
     navigator.setInitialPose(initial_pose)
 
-    # Wait for Nav2
+    # ===================================================================
+    # STEP 3: Wait for Nav2 (AMCL + localization) to be fully active
+    # ===================================================================
+    navigator.info('[Phase 3] Waiting for Nav2 stack (AMCL, planner, controller)...')
     navigator.waitUntilNav2Active()
+    navigator.info('══════════════════════════════════════════════')
+    navigator.info('Nav2 is ACTIVE — Robot is localized and ready!')
+    navigator.info('══════════════════════════════════════════════')
 
-    # Undock
-    navigator.undock()
+    # ===================================================================
+    # OLD undock (commented out — no dock in this simulation):
+    #   navigator.undock()
+    # ===================================================================
+
+    # ===================================================================
+    # STEP 4: Interactive waypoint delivery (PRESERVED — no changes)
+    # ===================================================================
 
     # Prepare goal pose options
     goal_options = [

@@ -40,6 +40,39 @@
       <pose>0 0 0 0 0 0</pose>
     </model>
 
+    <!-- TRẠM ARUCO MARKER LÀM CHUẨN (0,0,0) -->
+    <model name='aruco_marker_0'>
+      <static>true</static>
+      <!-- Dán lên tường cách gốc ngang 0, cao 20cm, quay mặt ra -->
+      <pose>0 0 0.20 0 -1.57079632679 0</pose>
+      <link name='link'>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.001</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <!-- Sử dụng kết cấu ảnh PBR cho Ignition Gazebo -->
+            <pbr>
+              <metal>
+                <albedo_map>materials/textures/aruco_marker_0.png</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>0.15 0.15 0.001</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
     <!-- Base -->
     <include>
       <uri>

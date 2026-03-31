@@ -38,9 +38,16 @@ ARGUMENTS = [
                           description='Turtlebot4 Model'),
 ]
 
-for pose_element in ['x', 'y', 'z', 'yaw']:
-    ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
-                     description=f'{pose_element} component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('x', default_value='1.0',
+                 description='x component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('y', default_value='0.0',
+                 description='y component of the robot pose.'))
+ARGUMENTS.append(DeclareLaunchArgument('z', default_value='0.0',
+                 description='z component of the robot pose.'))
+
+# yaw=0.0 (NORTH | +X), yaw=1.57 (WEST | +Y), yaw=3.14159 (SOUTH | -X), yaw=-1.57 (EAST | -Y)
+ARGUMENTS.append(DeclareLaunchArgument('yaw', default_value='3.14159',
+                 description='yaw component of the robot pose.'))
 
 
 def generate_launch_description():
