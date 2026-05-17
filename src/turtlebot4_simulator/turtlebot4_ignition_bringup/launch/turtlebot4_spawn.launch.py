@@ -125,7 +125,8 @@ def generate_launch_description():
     y_dock = OffsetParser(y, dock_offset_y)
     # Spawn robot slightly clsoer to the floor to reduce the drop
     # Ensures robot remains properly docked after the drop
-    z_robot = OffsetParser(z, -0.0025)
+    # z_robot = OffsetParser(z, -0.0025)
+    z_robot = OffsetParser(z, 0.0)
     # Rotate dock towards robot
     yaw_dock = OffsetParser(yaw, 3.1416)
 
