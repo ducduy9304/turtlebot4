@@ -36,6 +36,18 @@ ARGUMENTS = [
     DeclareLaunchArgument('model', default_value='standard',
                           choices=['standard', 'lite'],
                           description='Turtlebot4 Model'),
+
+    DeclareLaunchArgument('localization', default_value='false',
+                          choices=['true', 'false'],
+                          description='Whether to launch localization'),
+
+    DeclareLaunchArgument('slam', default_value='false',
+                          choices=['true', 'false'],
+                          description='Whether to launch SLAM'),
+
+    DeclareLaunchArgument('nav2', default_value='false',
+                          choices=['true', 'false'],
+                          description='Whether to launch Nav2'),
 ]
 
 ARGUMENTS.append(DeclareLaunchArgument('x', default_value='-1.95',
@@ -77,7 +89,10 @@ def generate_launch_description():
             ('x', LaunchConfiguration('x')),
             ('y', LaunchConfiguration('y')),
             ('z', LaunchConfiguration('z')),
-            ('yaw', LaunchConfiguration('yaw'))]
+            ('yaw', LaunchConfiguration('yaw')),
+            ('localization', LaunchConfiguration('localization')),
+            ('slam', LaunchConfiguration('slam')),
+            ('nav2', LaunchConfiguration('nav2'))]
     )
 
     # Create launch description and add actions
