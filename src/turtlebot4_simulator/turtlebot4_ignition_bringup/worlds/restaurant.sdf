@@ -189,11 +189,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 -0.003 0 0 0 0</pose>
+          <pose>0 -0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_0.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_0.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -447,11 +455,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_1.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_1.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -495,11 +511,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_2.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_2.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -543,11 +567,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_3.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_3.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -591,11 +623,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_4.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_4.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -639,11 +679,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_5.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_5.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -687,11 +735,19 @@
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
-          <pose>0 0.003 0 0 0 0</pose>
+          <pose>0 0.006 0 0 0 0</pose>
           <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
+            <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>aruco_marker_6.png</albedo_map></metal></pbr>
+            <specular>0 0 0 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>aruco_marker_6.png</albedo_map>
+                <metalness>0.0</metalness>
+                <roughness>1.0</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
