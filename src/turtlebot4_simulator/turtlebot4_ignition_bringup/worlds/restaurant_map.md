@@ -33,14 +33,14 @@ Mô hình nhà hàng cho TurtleBot4. Quy ước trục: **X** = trái/phải, **
 
 | Thành phần | Kích thước (X×Y×Z) | Vị trí |
 |---|---|---|
-| Hành lang thẳng (stem) | 0.6 × 6.7 × 0.02 | tâm `(0, −3.65)`, nối bếp ↔ crossbar |
-| → bệ đỡ stem | 0.5 × 6.7 × 1.1 | trụ chống xuống sàn |
-| Thanh ngang (crossbar) | 8.0 × 0.6 × 0.02 | tâm `(0, 0)`, dọc theo dãy bàn |
-| → bệ đỡ crossbar | 8.0 × 0.5 × 1.1 | trụ chống xuống sàn |
-| Tường viền cam stem (sw_l/r) | 0.02 × 6.7 × 0.3 | x = ±0.3 |
-| Tường viền cam crossbar (tw/bw/el/er) | dày 0.02, cao 0.3 | viền 2 mép + 2 đầu thanh ngang |
+| Hành lang thẳng (stem) | 1.8 × 6.1 × 0.02 | tâm `(0, −3.95)`, nối bếp ↔ mép crossbar |
+| → bệ đỡ stem | 1.7 × 6.1 × 1.1 | trụ chống xuống sàn |
+| Thanh ngang (crossbar) | 8.0 × 1.8 × 0.02 | tâm `(0, 0)`, dọc theo dãy bàn |
+| → bệ đỡ crossbar | 8.0 × 1.7 × 1.1 | trụ chống xuống sàn |
+| Tường viền cam stem (sw_l/r) | 0.02 × 6.1 × 0.3 | x = ±0.9 |
+| Tường viền cam crossbar (tw/bw/el/er) | dày 0.02, cao 0.3 | viền 2 mép y = ±0.9 + 2 đầu thanh ngang; mép dưới chừa khe 1.8 m cho stem |
 
-**Hành lang robot di chuyển:** rộng ~0.6 m, dài ~6.7 m (bếp → khu bàn), rồi rẽ dọc thanh ngang dài 8 m.
+**Hành lang robot di chuyển:** rộng ~1.8 m, dài ~6.1 m (bếp → mép crossbar), rồi rẽ dọc thanh ngang dài 8 m.
 
 ## 3. Bàn ăn (t1–t6) + ghế + mã QR
 

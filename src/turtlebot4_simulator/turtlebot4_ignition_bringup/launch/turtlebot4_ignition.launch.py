@@ -30,7 +30,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
 
-    DeclareLaunchArgument('world', default_value='warehouse',
+    DeclareLaunchArgument('world', default_value='restaurant',
                           description='Ignition World'),
 
     DeclareLaunchArgument('model', default_value='standard',
@@ -38,15 +38,16 @@ ARGUMENTS = [
                           description='Turtlebot4 Model'),
 ]
 
-ARGUMENTS.append(DeclareLaunchArgument('x', default_value='1.0',
+ARGUMENTS.append(DeclareLaunchArgument('x', default_value='-1.95',
                  description='x component of the robot pose.'))
-ARGUMENTS.append(DeclareLaunchArgument('y', default_value='0.0',
+ARGUMENTS.append(DeclareLaunchArgument('y', default_value='-8.0',
                  description='y component of the robot pose.'))
-ARGUMENTS.append(DeclareLaunchArgument('z', default_value='0.0',
+ARGUMENTS.append(DeclareLaunchArgument('z', default_value='1.12',
                  description='z component of the robot pose.'))
 
 # yaw=0.0 (NORTH | +X), yaw=1.57 (WEST | +Y), yaw=3.14159 (SOUTH | -X), yaw=-1.57 (EAST | -Y)
-ARGUMENTS.append(DeclareLaunchArgument('yaw', default_value='3.14159',
+# Dock: on kitchen counter (z=1.1), facing +y toward aruco_marker_0 at y=-7.01
+ARGUMENTS.append(DeclareLaunchArgument('yaw', default_value='1.5708',
                  description='yaw component of the robot pose.'))
 
 

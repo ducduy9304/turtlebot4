@@ -61,7 +61,7 @@
     <!-- ==================== KITCHEN HUB (inlined from kitchen_hub/model.sdf) ==================== -->
     <model name='kitchen_hub'>
       <static>true</static>
-      <pose>0 -8.1 0 0 -0 0</pose>
+      <pose>0 -8.2 0 0 -0 0</pose>
       <link name="link">
         <!-- Main Base -->
         <visual name="base_visual">
@@ -116,7 +116,7 @@
     <!-- Kitchen side walls (enclose left and right of kitchen hub for better LIDAR mapping) -->
     <model name='kitchen_wall_left'>
       <static>true</static>
-      <pose>-3.1 -8.15 1.0 0 0 0</pose>
+      <pose>-3.1 -8.25 1.0 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry><box><size>0.2 2.1 2.0</size></box></geometry>
@@ -133,7 +133,7 @@
 
     <model name='kitchen_wall_right'>
       <static>true</static>
-      <pose>3.1 -8.15 1.0 0 0 0</pose>
+      <pose>3.1 -8.25 1.0 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry><box><size>0.2 2.1 2.0</size></box></geometry>
@@ -148,30 +148,81 @@
       </link>
     </model>
 
+    <!-- Kitchen front partition walls (close off the sides at track-kitchen junction) -->
+    <model name='kitchen_front_wall_left'>
+      <static>true</static>
+      <pose>-1.95 -7.0 1.25 0 -0 0</pose>
+      <link name='l'>
+        <visual name='v'>
+          <geometry><box><size>2.1 0.02 0.3</size></box></geometry>
+          <material><ambient>0.8 0.4 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
+        </visual>
+        <collision name='c'>
+          <geometry><box><size>2.1 0.02 0.3</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name='kitchen_front_wall_right'>
+      <static>true</static>
+      <pose>1.95 -7.0 1.25 0 -0 0</pose>
+      <link name='l'>
+        <visual name='v'>
+          <geometry><box><size>2.1 0.02 0.3</size></box></geometry>
+          <material><ambient>0.8 0.4 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
+        </visual>
+        <collision name='c'>
+          <geometry><box><size>2.1 0.02 0.3</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ==================== DOCK / KITCHEN ArUco (ID 0) ==================== -->
+    <!-- Mounted on kitchen-facing side of kitchen_front_wall_left, facing -y into kitchen -->
+    <!-- Robot docks on kitchen counter: x=-1.95, y=-8.0, z=1.12, yaw=1.5708 (facing +y toward marker) -->
+    <model name='q_dock'>
+      <static>true</static>
+      <pose>-1.95 -7.01 1.25 0 -0 0</pose>
+      <link name="link">
+        <visual name="base">
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
+          <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
+        </visual>
+        <visual name="pattern">
+          <pose>0 -0.003 0 0 0 0</pose>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>aruco_marker_0.png</albedo_map></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
     <!-- ==================== DELIVERY TRACK ==================== -->
     <model name='track_stem'>
       <static>true</static>
-      <pose>0 -3.65 1.1 0 -0 0</pose>
+      <pose>0 -3.95 1.1 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>0.6 6.7 0.02</size></box></geometry>
+          <geometry><box><size>1.8 6.1 0.02</size></box></geometry>
           <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
         </visual>
         <collision name='surface'>
-          <geometry><box><size>0.6 6.7 0.02</size></box></geometry>
+          <geometry><box><size>1.8 6.1 0.02</size></box></geometry>
         </collision>
         <visual name='ped'>
           <pose>0 0 -0.55 0 0 0</pose>
-          <geometry><box><size>0.5 6.7 1.1</size></box></geometry>
+          <geometry><box><size>1.7 6.1 1.1</size></box></geometry>
           <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
         </visual>
         <collision name='ped'>
           <pose>0 0 -0.55 0 0 0</pose>
-          <geometry><box><size>0.5 6.7 1.1</size></box></geometry>
+          <geometry><box><size>1.7 6.1 1.1</size></box></geometry>
         </collision>
         <visual name='a'>
           <pose>0 0 0.01 0 0 0</pose>
-          <geometry><box><size>0.05 6.7 0.005</size></box></geometry>
+          <geometry><box><size>0.05 6.1 0.005</size></box></geometry>
           <material>
             <ambient>0 0.5 1 1</ambient><diffuse>0 0.5 1 1</diffuse>
             <emissive>0 0.2 1 1</emissive>
@@ -185,20 +236,20 @@
       <pose>0 0 1.1 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>8 0.6 0.02</size></box></geometry>
+          <geometry><box><size>8 1.8 0.02</size></box></geometry>
           <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
         </visual>
         <collision name='surface'>
-          <geometry><box><size>8 0.6 0.02</size></box></geometry>
+          <geometry><box><size>8 1.8 0.02</size></box></geometry>
         </collision>
         <visual name='ped'>
           <pose>0 0 -0.55 0 0 0</pose>
-          <geometry><box><size>8 0.5 1.1</size></box></geometry>
+          <geometry><box><size>8 1.7 1.1</size></box></geometry>
           <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
         </visual>
         <collision name='ped'>
           <pose>0 0 -0.55 0 0 0</pose>
-          <geometry><box><size>8 0.5 1.1</size></box></geometry>
+          <geometry><box><size>8 1.7 1.1</size></box></geometry>
         </collision>
         <visual name='a'>
           <pose>0 0 0.01 0 0 0</pose>
@@ -214,10 +265,10 @@
     <!-- Track side walls (orange) -->
     <model name='sw_l'>
       <static>true</static>
-      <pose>-0.3 -3.65 1.25 0 -0 0</pose>
+      <pose>-0.9 -3.95 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>0.02 6.7 0.3</size></box></geometry>
+          <geometry><box><size>0.02 6.1 0.3</size></box></geometry>
           <material><ambient>0.8 0.4 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -225,10 +276,10 @@
 
     <model name='sw_r'>
       <static>true</static>
-      <pose>0.3 -3.65 1.25 0 -0 0</pose>
+      <pose>0.9 -3.95 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>0.02 6.7 0.3</size></box></geometry>
+          <geometry><box><size>0.02 6.1 0.3</size></box></geometry>
           <material><ambient>0.8 0.4 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -237,7 +288,7 @@
     <!-- Crossbar top walls -->
     <model name='tw1'>
       <static>true</static>
-      <pose>-3.9 0.3 1.25 0 -0 0</pose>
+      <pose>-3.9 0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>0.2 0.02 0.3</size></box></geometry>
@@ -248,7 +299,7 @@
 
     <model name='tw2'>
       <static>true</static>
-      <pose>-2.3 0.3 1.25 0 -0 0</pose>
+      <pose>-2.3 0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>1 0.02 0.3</size></box></geometry>
@@ -259,7 +310,7 @@
 
     <model name='tw3'>
       <static>true</static>
-      <pose>0 0.3 1.25 0 -0 0</pose>
+      <pose>0 0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>1.6 0.02 0.3</size></box></geometry>
@@ -270,7 +321,7 @@
 
     <model name='tw4'>
       <static>true</static>
-      <pose>2.3 0.3 1.25 0 -0 0</pose>
+      <pose>2.3 0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>1 0.02 0.3</size></box></geometry>
@@ -281,7 +332,7 @@
 
     <model name='tw5'>
       <static>true</static>
-      <pose>3.9 0.3 1.25 0 -0 0</pose>
+      <pose>3.9 0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>0.2 0.02 0.3</size></box></geometry>
@@ -293,7 +344,7 @@
     <!-- Crossbar bottom walls -->
     <model name='bw1'>
       <static>true</static>
-      <pose>-3.4 -0.3 1.25 0 -0 0</pose>
+      <pose>-3.4 -0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>1.2 0.02 0.3</size></box></geometry>
@@ -304,10 +355,10 @@
 
     <model name='bw2'>
       <static>true</static>
-      <pose>-1.05 -0.3 1.25 0 -0 0</pose>
+      <pose>-1.35 -0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>1.5 0.02 0.3</size></box></geometry>
+          <geometry><box><size>0.9 0.02 0.3</size></box></geometry>
           <material><ambient>1 0.5 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -315,10 +366,10 @@
 
     <model name='bw3'>
       <static>true</static>
-      <pose>1.05 -0.3 1.25 0 -0 0</pose>
+      <pose>1.35 -0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>1.5 0.02 0.3</size></box></geometry>
+          <geometry><box><size>0.9 0.02 0.3</size></box></geometry>
           <material><ambient>1 0.5 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -326,7 +377,7 @@
 
     <model name='bw4'>
       <static>true</static>
-      <pose>3.4 -0.3 1.25 0 -0 0</pose>
+      <pose>3.4 -0.9 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
           <geometry><box><size>1.2 0.02 0.3</size></box></geometry>
@@ -341,7 +392,7 @@
       <pose>-4 0 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>0.02 0.6 0.3</size></box></geometry>
+          <geometry><box><size>0.02 1.8 0.3</size></box></geometry>
           <material><ambient>1 0.5 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -352,7 +403,7 @@
       <pose>4 0 1.25 0 -0 0</pose>
       <link name='l'>
         <visual name='v'>
-          <geometry><box><size>0.02 0.6 0.3</size></box></geometry>
+          <geometry><box><size>0.02 1.8 0.3</size></box></geometry>
           <material><ambient>1 0.5 0 1</ambient><diffuse>1 0.5 0 1</diffuse></material>
         </visual>
       </link>
@@ -389,18 +440,18 @@
     </model>
     <model name='q1'>
       <static>true</static>
-      <pose>-3.29282 -0.240871 1.25 0 -0 0.335309</pose>
+      <pose>-3.29282 -0.89 1.25 0 -0 0</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_1.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_1.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
@@ -437,18 +488,18 @@
     </model>
     <model name='q2'>
       <static>true</static>
-      <pose>-2.3 0.272367 1.25 0 -0 3.14159</pose>
+      <pose>-2.3 0.89 1.25 0 -0 3.14159</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_2.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_2.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
@@ -485,18 +536,18 @@
     </model>
     <model name='q3'>
       <static>true</static>
-      <pose>-1.3 -0.268975 1.25 0 -0 0</pose>
+      <pose>-1.3 -0.89 1.25 0 -0 0</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_3.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_3.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
@@ -533,18 +584,18 @@
     </model>
     <model name='q4'>
       <static>true</static>
-      <pose>1.3 -0.258756 1.25 0 -0 0</pose>
+      <pose>1.3 -0.89 1.25 0 -0 0</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_4.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_4.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
@@ -581,18 +632,18 @@
     </model>
     <model name='q5'>
       <static>true</static>
-      <pose>2.3 0.262595 1.25 0 -0 3.14159</pose>
+      <pose>2.3 0.89 1.25 0 -0 3.14159</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_5.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_5.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
@@ -629,18 +680,18 @@
     </model>
     <model name='q6'>
       <static>true</static>
-      <pose>3.3 -0.238684 1.25 0 -0 0</pose>
+      <pose>3.3 -0.89 1.25 0 -0 0</pose>
       <link name="link">
         <visual name="base">
-          <geometry><box><size>0.1 0.005 0.1</size></box></geometry>
+          <geometry><box><size>0.2 0.005 0.2</size></box></geometry>
           <material><ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse></material>
         </visual>
         <visual name="pattern">
           <pose>0 0.003 0 0 0 0</pose>
-          <geometry><box><size>0.09 0.001 0.09</size></box></geometry>
+          <geometry><box><size>0.18 0.001 0.18</size></box></geometry>
           <material>
             <diffuse>1 1 1 1</diffuse>
-            <pbr><metal><albedo_map>materials/textures/table_6.png</albedo_map></metal></pbr>
+            <pbr><metal><albedo_map>aruco_marker_6.png</albedo_map></metal></pbr>
           </material>
         </visual>
       </link>
