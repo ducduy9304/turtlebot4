@@ -23,13 +23,9 @@
 #      (ID 0). If it is not visible, rotate once to search for it; if it
 #      is found, align with it and keep init = spawn.
 #   2. Select a table: Nav2/AMCL sends the robot to the table approach
-#      pose. At the approach point, scan that table's ArUco marker,
-#      align with it (P-controller on /cmd_vel), move close, then back up
-#      slightly so the guest can interact. Re-init the pose from known
-#      marker coordinates for better accuracy.
-#   3. Return to Dock: Nav2 sends the robot in front of the kitchen,
-#      aligns with ArUco ID 0, then backs up to the original spawn pose
-#      and resets init.
+#      pose and stops. No ArUco scanning at the table yet.
+#   3. Return to Dock: Nav2 sends the robot back to the spawn pose and
+#      stops. No ArUco scanning at the dock yet.
 #
 # Heading convention (restaurant map):
 #   yaw 0   = NORTH = +X       yaw 90  = WEST  = +Y
@@ -303,61 +299,22 @@ def startup_sequence(nav, tracker, cmd_pub):
     nav.info('[STARTUP] Complete. Ready to receive delivery commands.')
 
 
-def deliver_to(nav, tracker, cmd_pub, name):
+def deliver_to(nav, name):
     dest = DESTINATIONS[name]
     marker_id = dest['id']
     position, heading = dest['approach']
 
     nav.info(f'── Delivering to {name} (ArUco ID {marker_id}) ──')
     goto_approach(nav, position, heading)
-
-    # At the approach point: find the table marker; if it is not visible, search once.
-    rclpy.spin_once(tracker, timeout_sec=0.05)
-    if tracker.get_marker(marker_id) is None:
-        search_marker_360(nav, tracker, cmd_pub, marker_id)
-
-    aligned = visual_align(nav, tracker, cmd_pub, marker_id, approach=True)
-
-    # Re-init from the known approach pose for better localization accuracy.
-    nav.setInitialPose(nav.getPoseStamped(position, heading))
-
-    if aligned:
-        nav.info(f'[{name}] Reached the marker — backing up {TABLE_BACKUP_DIST} m '
-                 'so the guest can interact.')
-        nav.backup(backup_dist=TABLE_BACKUP_DIST, backup_speed=0.05)
-        _run_nav_primitive(nav)
-        nav.info(f'[{name}] Delivery complete. The guest may take the order.')
-    else:
-        nav.warn(f'[{name}] Reached the destination but could not align with the marker. '
-                 'Stopped at the approach point.')
+    _run_nav_primitive(nav)
+    nav.info(f'[{name}] Arrived at approach point. Delivery complete.')
 
 
-def return_to_dock(nav, tracker, cmd_pub):
+def return_to_dock(nav):
     position, heading = DOCK_APPROACH
     nav.info('── Returning to Dock ──')
     goto_approach(nav, position, heading)
-
-    rclpy.spin_once(tracker, timeout_sec=0.05)
-    if tracker.get_marker(DOCK_MARKER_ID) is None:
-        search_marker_360(nav, tracker, cmd_pub, DOCK_MARKER_ID)
-
-    aligned = visual_align(nav, tracker, cmd_pub, DOCK_MARKER_ID,
-                           approach=False)
-    nav.setInitialPose(nav.getPoseStamped(position, heading))
-
-    if aligned:
-        if DOCK_BACKUP_DIST > 0.0:
-            nav.info(f'[Dock] Aligned — backing up {DOCK_BACKUP_DIST} m '
-                     'to the original spawn pose.')
-            nav.backup(backup_dist=DOCK_BACKUP_DIST, backup_speed=0.05)
-            _run_nav_primitive(nav)
-        else:
-            nav.info('[Dock] Aligned at the spawn pose.')
-    else:
-        nav.warn('[Dock] Could not align with ID0 — returning to spawn with Nav2.')
-        goto_approach(nav, SPAWN_POSE,
-                      int(SPAWN_HEADING))
-
+    _run_nav_primitive(nav)
     nav.setInitialPose(nav.getPoseStamped(SPAWN_POSE, SPAWN_HEADING))
     nav.info('[Dock] Returned to the spawn pose. Complete.')
 
@@ -396,9 +353,9 @@ def main(args=None):
             if choice == 'Exit':
                 break
             elif choice == 'Return to Dock':
-                return_to_dock(nav, tracker, cmd_pub)
+                return_to_dock(nav)
             else:
-                deliver_to(nav, tracker, cmd_pub, choice)
+                deliver_to(nav, choice)
 
     except KeyboardInterrupt:
         nav.info('Interrupted by user.')
