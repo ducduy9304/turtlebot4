@@ -34,7 +34,7 @@ ARGUMENTS = [
                           description='Ignition World'),
 
     DeclareLaunchArgument('model', default_value='standard',
-                          choices=['standard', 'lite'],
+                          choices=['standard'],
                           description='Turtlebot4 Model'),
 
     DeclareLaunchArgument('localization', default_value='false',

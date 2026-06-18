@@ -18,7 +18,6 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
@@ -38,7 +37,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='warehouse',
                           description='World name'),
     DeclareLaunchArgument('model', default_value='standard',
-                          choices=['standard', 'lite'],
+                          choices=['standard'],
                           description='Turtlebot4 Model'),
 ]
 
@@ -49,16 +48,6 @@ def generate_launch_description():
     dock_name = LaunchConfiguration('dock_name')
     namespace = LaunchConfiguration('namespace')
     world = LaunchConfiguration('world')
-
-    leds = [
-        'power',
-        'motors',
-        'comms',
-        'wifi',
-        'battery',
-        'user1',
-        'user2'
-    ]
 
     pkg_irobot_create_ignition_bringup = get_package_share_directory(
         'irobot_create_ignition_bringup')
@@ -97,65 +86,6 @@ def generate_launch_description():
               '/link/rplidar_link/sensor/rplidar/scan'],
              'scan')
         ])
-
-    # Display message bridge
-    hmi_display_msg_bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='hmi_display_msg_bridge',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[
-            [namespace, '/hmi/display/raw' +
-             '@std_msgs/msg/String' +
-             ']ignition.msgs.StringMsg'],
-            [namespace, '/hmi/display/selected' +
-             '@std_msgs/msg/Int32' +
-             ']ignition.msgs.Int32']
-        ],
-        remappings=[
-            ([namespace, '/hmi/display/raw'],
-             'hmi/display/_raw'),
-            ([namespace, '/hmi/display/selected'],
-             'hmi/display/_selected')
-        ],
-        condition=LaunchConfigurationEquals('model', 'standard'))
-
-    # Buttons message bridge
-    hmi_buttons_msg_bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='hmi_buttons_msg_bridge',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[
-            [namespace, '/hmi/buttons' +
-             '@std_msgs/msg/Int32' +
-             '[ignition.msgs.Int32']
-        ],
-        remappings=[
-            ([namespace, '/hmi/buttons'],
-             'hmi/buttons/_set')
-        ],
-        condition=LaunchConfigurationEquals('model', 'standard'))
-
-    # Buttons message bridge
-    hmi_led_msg_bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='hmi_led_msg_bridge',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
-        arguments=[
-            [namespace, '/hmi/led/' + led +
-             '@std_msgs/msg/Int32' +
-             ']ignition.msgs.Int32'] for led in leds
-        ],
-        remappings=[
-            ([namespace, '/hmi/led/' + led],
-             'hmi/led/_' + led) for led in leds
-        ],
-        condition=LaunchConfigurationEquals('model', 'standard'))
 
     # Camera sensor bridge
     oakd_camera_bridge = Node(
@@ -209,9 +139,6 @@ def generate_launch_description():
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(create3_bridge)
-    ld.add_action(hmi_display_msg_bridge)
-    ld.add_action(hmi_buttons_msg_bridge)
-    ld.add_action(hmi_led_msg_bridge)
     ld.add_action(lidar_bridge)
     ld.add_action(oakd_camera_bridge)
     return ld

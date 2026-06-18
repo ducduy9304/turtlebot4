@@ -27,7 +27,7 @@ from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('model', default_value='standard',
-                          choices=['standard', 'lite'],
+                          choices=['standard'],
                           description='Turtlebot4 Model'),
     DeclareLaunchArgument('use_sim_time', default_value='false',
                           choices=['true', 'false'],

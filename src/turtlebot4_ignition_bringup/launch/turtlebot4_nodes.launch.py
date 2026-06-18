@@ -18,13 +18,12 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import LaunchConfigurationEquals
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('model', default_value='standard',
-                          choices=['standard', 'lite'],
+                          choices=['standard'],
                           description='Turtlebot4 Model')
 ]
 
@@ -54,18 +53,8 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Turtlebot4 Ignition Hmi node
-    turtlebot4_ignition_hmi_node = Node(
-        package='turtlebot4_ignition_toolbox',
-        name='turtlebot4_ignition_hmi_node',
-        executable='turtlebot4_ignition_hmi_node',
-        output='screen',
-        condition=LaunchConfigurationEquals('model', 'standard')
-    )
-
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(param_file_cmd)
     ld.add_action(turtlebot4_node)
-    ld.add_action(turtlebot4_ignition_hmi_node)
     return ld

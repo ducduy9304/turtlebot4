@@ -34,8 +34,8 @@ ARGUMENTS = [
                           description='use_sim_time'),
     DeclareLaunchArgument('world', default_value='warehouse',
                           description='Ignition World'),
-    DeclareLaunchArgument('model', default_value='lite',
-                          choices=['standard', 'lite'],
+    DeclareLaunchArgument('model', default_value='standard',
+                          choices=['standard'],
                           description='Turtlebot4 Model'),
 ]
 
@@ -45,8 +45,6 @@ def generate_launch_description():
     # Directories
     pkg_turtlebot4_ignition_bringup = get_package_share_directory(
         'turtlebot4_ignition_bringup')
-    pkg_turtlebot4_ignition_gui_plugins = get_package_share_directory(
-        'turtlebot4_ignition_gui_plugins')
     pkg_turtlebot4_description = get_package_share_directory(
         'turtlebot4_description')
     pkg_irobot_create_description = get_package_share_directory(
@@ -69,9 +67,7 @@ def generate_launch_description():
 
     ign_gui_plugin_path = SetEnvironmentVariable(
         name='IGN_GUI_PLUGIN_PATH',
-        value=[
-            os.path.join(pkg_turtlebot4_ignition_gui_plugins, 'lib'), ':' +
-            os.path.join(pkg_irobot_create_ignition_plugins, 'lib')])
+        value=[os.path.join(pkg_irobot_create_ignition_plugins, 'lib')])
 
     # Paths
     ign_gazebo_launch = PathJoinSubstitution(
